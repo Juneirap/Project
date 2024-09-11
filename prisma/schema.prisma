@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+model Product {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  price     Float
+  imageUrls String[]
+  colors    Color[]  @relation("ProductColors") // ลบ onDelete: Cascade
+}
+
+model Color {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  hexCode   String
+  imageUrl  String
+  productId String // เชื่อมโยงกับ Product
+  product   Product @relation("ProductColors", fields: [productId], references: [id])
+}
